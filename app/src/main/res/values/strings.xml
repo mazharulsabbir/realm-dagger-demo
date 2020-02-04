@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Realm Practise</string>
+    <string name="name">%1$s %2$s %3$s</string>
+    <string name="email">Email: %1$s</string>
+    <string name="phone">Phone: %1$s</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="error">No users found!</string>
+</resources>

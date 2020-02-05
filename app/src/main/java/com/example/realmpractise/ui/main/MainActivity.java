@@ -47,7 +47,7 @@ import retrofit2.Retrofit;
  * Provides the main UI of the app
  **/
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HistoryFragment.OnHistoryClickListener {
     private static final String TAG = "MainActivity";
 
     private boolean mOnline = true;
@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     TextView mPhone;
     @BindView(R.id.main_switch)
     FloatingActionButton mSwitch;
+    @BindView(R.id.main_refresh)
+    FloatingActionButton mRefresh;
     @BindView(R.id.main_shimmer)
     ShimmerFrameLayout mLoading;
     @BindView(R.id.main_content)
@@ -89,14 +91,7 @@ public class MainActivity extends AppCompatActivity {
                                 Result result = resultResource.getData();
                                 if (result != null) {
                                     setError(false);
-                                    Glide.with(mProPic)
-                                            .load(result.getPicture().getLarge())
-                                            .circleCrop()
-                                            .into(mProPic);
-
-                                    mName.setText(getString(R.string.name, result.getName().getTitle(), result.getName().getFirst(), result.getName().getLast()));
-                                    mEmail.setText(getString(R.string.email, result.getEmail()));
-                                    mPhone.setText(getString(R.string.phone, result.getPhone()));
+                                    showUser(result);
                                 } else {
                                     setError(true);
                                 }
@@ -113,21 +108,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         mViewModel.loadUser(mOnline);
-        if (mOnline) {
-            getSupportActionBar().setTitle(MainActivity.this.getString(R.string.online));
-        } else {
-            getSupportActionBar().setTitle(MainActivity.this.getString(R.string.offline));
-        }
+        showOnline(mOnline);
         mSwitch.setOnClickListener(v -> {
-            if (mOnline) {
-                mOnline = false;
-                getSupportActionBar().setTitle(MainActivity.this.getString(R.string.offline));
-                mViewModel.loadUser(mOnline);
-            } else {
-                mOnline = true;
-                getSupportActionBar().setTitle(MainActivity.this.getString(R.string.online));
-                mViewModel.loadUser(mOnline);
-            }
+            mOnline = !mOnline;
+            mViewModel.loadUser(mOnline);
+            showOnline(mOnline);
         });
     }
 
@@ -154,5 +139,38 @@ public class MainActivity extends AppCompatActivity {
             mLoading.setVisibility(View.GONE);
             mContent.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void showOnline(boolean online) {
+        if (online) {
+            getSupportActionBar().setTitle(MainActivity.this.getString(R.string.online));
+            mRefresh.setImageResource(R.drawable.ic_refresh);
+            mRefresh.setOnClickListener(v -> {
+                mViewModel.loadUser(true);
+            });
+        } else {
+            getSupportActionBar().setTitle(MainActivity.this.getString(R.string.offline));
+            mRefresh.setImageResource(R.drawable.ic_history);
+            mRefresh.setOnClickListener(v -> {
+                HistoryFragment historyFragment = HistoryFragment.newInstance();
+                historyFragment.show(getSupportFragmentManager(), "History");
+            });
+        }
+    }
+
+    private void showUser(Result result) {
+        Glide.with(mProPic)
+                .load(result.getPicture().getLarge())
+                .circleCrop()
+                .into(mProPic);
+
+        mName.setText(getString(R.string.name, result.getName().getTitle(), result.getName().getFirst(), result.getName().getLast()));
+        mEmail.setText(getString(R.string.email, result.getEmail()));
+        mPhone.setText(getString(R.string.phone, result.getPhone()));
+    }
+
+    @Override
+    public void onHistoryItemClick(Result result) {
+        showUser(result);
     }
 }

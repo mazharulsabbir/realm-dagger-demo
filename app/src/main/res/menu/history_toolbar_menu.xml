@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/item_history_close"
+        android:icon="@drawable/ic_close"
+        android:orderInCategory="200"
+        app:showAsAction="always"
+        android:actionLayout="@layout/fragment_history"
+        android:title="Close" />
+</menu>

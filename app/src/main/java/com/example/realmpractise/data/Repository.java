@@ -23,8 +23,10 @@ import com.example.realmpractise.models.Result;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import io.realm.Sort;
 
 /**
@@ -68,6 +70,15 @@ public class Repository {
                     .findFirst();
             emitter.onSuccess(realm.copyFromRealm(result));
         });
+    }
+
+    public Flowable<RealmResults<Result>> getLatestObjects() {
+        return Realm.getDefaultInstance()
+                .where(Result.class)
+                .sort("createdAt", Sort.DESCENDING)
+                .limit(10)
+                .findAllAsync()
+                .asFlowable();
     }
 
 

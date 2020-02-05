@@ -46,6 +46,7 @@ dependencies {
     // (see https://github.com/ReactiveX/RxJava/releases for latest 2.x.x version)
     implementation 'io.reactivex.rxjava2:rxjava:2.2.17'
 
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     dependencies {
         def lifecycle_version = "2.2.0"
         def savedstate_version = "1.0.0"
@@ -78,12 +79,16 @@ dependencies {
 
     //dagger
     implementation 'com.google.dagger:dagger-android:2.21'
-    implementation 'com.google.dagger:dagger-android-support:2.21' // if you use the support libraries
+    implementation 'com.google.dagger:dagger-android-support:2.21'
+    // if you use the support libraries
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.21'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.21'
 
     //shimmer Facebook
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
+    //brvah
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.49-androidx'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
